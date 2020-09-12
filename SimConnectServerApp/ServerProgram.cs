@@ -1,14 +1,10 @@
 ﻿using System.Threading.Tasks;
 using SimConnect;
 
-
-
 namespace HelloWorld
 {
 	class ServerProgram
 	{
-		static bool running = true;
-
 		static void Main (string [] args)
 		{
 			var tList = new Task [2];

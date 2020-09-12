@@ -79,12 +79,12 @@ namespace HelloWorld
 
 			client.RequestDataOnSimObject (MyRequests.Two, MyDefinitions.Two, Constants.ObjectIdUser, Period.Second, DataRequestFlag.Changed);
 
-    //        unchecked
-    //        {
-				//client.TransmitClientEvent (Constants.ObjectIdUser, MyEvents.ElevatorTrimSet, (uint)0, MyGroups.One, EventFlag.Default);
-    //        }
+			//unchecked
+			//{
+			//	client.TransmitClientEvent (Constants.ObjectIdUser, MyEvents.ElevatorTrimSet, (uint)0, MyGroups.One, EventFlag.Default);
+			//}
 
-            var buff = new byte[1024];
+			var buff = new byte [1024];
 
 			while (running)
 			{
