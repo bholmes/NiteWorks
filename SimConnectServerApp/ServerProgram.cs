@@ -17,7 +17,7 @@ namespace HelloWorld
 
 		static void ServerMain (string [] args)
 		{
-			var server = new Server ();
+			var server = new SocketServer ();
 			server.StartServer (11000).Wait ();
 		}
 	}

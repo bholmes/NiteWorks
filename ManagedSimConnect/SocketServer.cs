@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace SimConnect
 {
-	public class Server
+	public class SocketServer
 	{
 		Socket socket;
 
