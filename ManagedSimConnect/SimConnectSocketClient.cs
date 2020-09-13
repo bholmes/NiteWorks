@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 
 namespace SimConnect
 {
@@ -8,7 +11,7 @@ namespace SimConnect
 	{
 		bool disposedValue;
 		Socket socket;
-
+		Dictionary<uint, Type> dataDefinitionTypeLookup = new Dictionary<uint, Type> ();
 
 		public SocketClient (string name, string serverHostName, int port)
 		{
@@ -38,7 +41,7 @@ namespace SimConnect
 			return MethodCall.ReturnValue.FromByteArray (iBuff);
 		}
 
-		public int GetNextDispatch (byte [] buff, out uint cbData)
+		public void GetNextDispatch (byte [] buff, out uint cbData)
 		{
 			var ret = (MethodCall.ReturnValue.GetNextDispatch)InvokeOverSocket (new MethodCall.GetNextDispatch ());
 
@@ -51,37 +54,75 @@ namespace SimConnect
 				ret.Data.CopyTo (buff, 0);
 			}
 
-			return ret.Hresult;
+			CheckHresult (ret.Hresult);
 		}
 
-		public int MapClientEventToSimEvent (Enum eventId, string eventName = "")
+		unsafe public Recv GetNextDispatch ()
 		{
-			return InvokeOverSocket (new MethodCall.MapClientEventToSimEvent (Convert.ToUInt32 (eventId), eventName)).Hresult;
+			var ret = (MethodCall.ReturnValue.GetNextDispatch)InvokeOverSocket (new MethodCall.GetNextDispatch ());
+			CheckHresult (ret.Hresult);
+
+			fixed (byte* b = &ret.Data [0])
+			{
+				var pData = (IntPtr)b;
+
+				var pRecv = Marshal.PtrToStructure<SIMCONNECT_RECV> (pData);
+				switch ((RecvId)pRecv.dwID)
+				{
+					case RecvId.Event:
+						return RecvEvent.FromMemory (pData);
+
+					case RecvId.SimobjectData:
+						return RecvSimObjectData.FromMemory (pData, dataDefinitionTypeLookup);
+
+					case RecvId.SimobjectDataByType:
+						return RecvSimObjectDataByType.FromMemory (pData, dataDefinitionTypeLookup);
+
+					default:
+						return Recv.FromMemory (pData);
+				}
+			}
 		}
 
-		public int AddClientEventToNotificationGroup (Enum groupId, Enum eventId, bool bMaskable = false)
+		void CheckHresult (int hr, [CallerMemberName] string callerName = "")
 		{
-			return InvokeOverSocket (new MethodCall.AddClientEventToNotificationGroup (Convert.ToUInt32 (groupId), Convert.ToUInt32 (eventId), bMaskable ? 1 : 0)).Hresult;
+			if (hr < 0)
+				throw new Exception ($"Error code from {callerName} : {hr}");
 		}
 
-		public int SetNotificationGroupPriority (Enum groupId, uint priority)
+		public void MapClientEventToSimEvent (Enum eventId, string eventName = "")
 		{
-			return InvokeOverSocket (new MethodCall.SetNotificationGroupPriority (Convert.ToUInt32 (groupId), priority)).Hresult;
+			CheckHresult (InvokeOverSocket (new MethodCall.MapClientEventToSimEvent (Convert.ToUInt32 (eventId), eventName)).Hresult);
 		}
 
-		public int AddToDataDefinition (Enum defineId, string datumName, string unitsName, Datatype datumType = Datatype.Float64, float fEpsilon = 0, uint datumId = Constants.Unused)
+		public void AddClientEventToNotificationGroup (Enum groupId, Enum eventId, bool bMaskable = false)
 		{
-			return InvokeOverSocket (new MethodCall.AddToDataDefinition (Convert.ToUInt32 (defineId), datumName, unitsName, datumType, fEpsilon, datumId)).Hresult;
+			CheckHresult (InvokeOverSocket (new MethodCall.AddClientEventToNotificationGroup (Convert.ToUInt32 (groupId), Convert.ToUInt32 (eventId), bMaskable ? 1 : 0)).Hresult);
 		}
 
-		public int RequestDataOnSimObject (Enum requestId, Enum defineId, uint objectId, Period period, DataRequestFlag flags = 0, uint origin = 0, uint interval = 0, uint limit = 0)
+		public void SetNotificationGroupPriority (Enum groupId, uint priority)
 		{
-			return InvokeOverSocket (new MethodCall.RequestDataOnSimObject (Convert.ToUInt32 (requestId), Convert.ToUInt32 (defineId), objectId, period, flags, origin, interval, limit)).Hresult;
+			CheckHresult (InvokeOverSocket (new MethodCall.SetNotificationGroupPriority (Convert.ToUInt32 (groupId), priority)).Hresult);
 		}
 
-		public int TransmitClientEvent (uint objectId, Enum eventId, uint dwData, Enum groupId, EventFlag flags)
+		public void AddToDataDefinition (Enum defineId, string datumName, string unitsName, Datatype datumType = Datatype.Float64, float fEpsilon = 0, uint datumId = Constants.Unused)
 		{
-			return InvokeOverSocket (new MethodCall.TransmitClientEvent (objectId, Convert.ToUInt32 (eventId), dwData, Convert.ToUInt32 (groupId), flags)).Hresult;
+			CheckHresult (InvokeOverSocket (new MethodCall.AddToDataDefinition (Convert.ToUInt32 (defineId), datumName, unitsName, datumType, fEpsilon, datumId)).Hresult);
+		}
+
+		public void RegisterStructToDataDefinition (Enum defineId, Type type)
+		{
+			dataDefinitionTypeLookup.Add (Convert.ToUInt32 (defineId), type);
+		}
+
+		public void RequestDataOnSimObject (Enum requestId, Enum defineId, uint objectId, Period period, DataRequestFlag flags = 0, uint origin = 0, uint interval = 0, uint limit = 0)
+		{
+			CheckHresult (InvokeOverSocket (new MethodCall.RequestDataOnSimObject (Convert.ToUInt32 (requestId), Convert.ToUInt32 (defineId), objectId, period, flags, origin, interval, limit)).Hresult);
+		}
+
+		public void TransmitClientEvent (uint objectId, Enum eventId, uint dwData, Enum groupId, EventFlag flags)
+		{
+			CheckHresult (InvokeOverSocket (new MethodCall.TransmitClientEvent (objectId, Convert.ToUInt32 (eventId), dwData, Convert.ToUInt32 (groupId), flags)).Hresult);
 		}
 
 		void ConnectToServer (string serverHostName, int port)

@@ -45,7 +45,7 @@ namespace SimConnect
 	}
 
 	[StructLayout (LayoutKind.Sequential)]
-	public struct SIMCONNECT_RECV
+	internal struct SIMCONNECT_RECV
 	{
 		public DWORD dwSize;         // record size
 		public DWORD dwVersion;      // interface version
@@ -53,7 +53,7 @@ namespace SimConnect
 	}
 
 	[StructLayout (LayoutKind.Sequential)]
-	public struct SIMCONNECT_RECV_EVENT // : SIMCONNECT_RECV       // when dwID == SIMCONNECT_RECV_ID_EVENT
+	internal struct SIMCONNECT_RECV_EVENT // : SIMCONNECT_RECV       // when dwID == SIMCONNECT_RECV_ID_EVENT
 	{
 		// SIMCONNECT_RECV fields
 		public DWORD dwSize;         // record size
@@ -68,7 +68,7 @@ namespace SimConnect
 	}
 
 	[StructLayout (LayoutKind.Sequential)]
-	public struct SIMCONNECT_RECV_SIMOBJECT_DATA // : public SIMCONNECT_RECV           // when dwID == SIMCONNECT_RECV_ID_SIMOBJECT_DATA
+	internal struct SIMCONNECT_RECV_SIMOBJECT_DATA // : public SIMCONNECT_RECV           // when dwID == SIMCONNECT_RECV_ID_SIMOBJECT_DATA
 	{
 		// SIMCONNECT_RECV fields
 		public DWORD dwSize;         // record size
@@ -89,7 +89,7 @@ namespace SimConnect
 	}
 
 	[StructLayout (LayoutKind.Sequential)]
-	public struct SIMCONNECT_RECV_SIMOBJECT_DATA_BYTYPE // : public SIMCONNECT_RECV           // when dwID == SIMCONNECT_RECV_ID_SIMOBJECT_DATA
+	internal struct SIMCONNECT_RECV_SIMOBJECT_DATA_BYTYPE // : public SIMCONNECT_RECV           // when dwID == SIMCONNECT_RECV_ID_SIMOBJECT_DATA
 	{
 		// SIMCONNECT_RECV fields
 		public DWORD dwSize;         // record size

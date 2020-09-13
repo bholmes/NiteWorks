@@ -71,11 +71,13 @@ namespace HelloWorld
 
 			client.AddToDataDefinition (MyDefinitions.One, "ELEVATOR TRIM INDICATOR", "Position", Datatype.Float32, 0f, Constants.Unused);
 			client.AddToDataDefinition (MyDefinitions.One, "ELEVATOR TRIM POSITION", "Degrees", Datatype.Float32, 0f, Constants.Unused);
+			client.RegisterStructToDataDefinition (MyDefinitions.One, typeof (Struct1));
 
 			client.AddToDataDefinition (MyDefinitions.Two, "VELOCITY BODY Y", "Feet per second", Datatype.Float32, 0f, Constants.Unused);
 			client.AddToDataDefinition (MyDefinitions.Two, "VELOCITY WORLD Y", "Feet per second", Datatype.Float32, 0f, Constants.Unused);
 			client.AddToDataDefinition (MyDefinitions.Two, "VERTICAL SPEED", "Feet per second", Datatype.Float32, 0f, Constants.Unused);
 			client.AddToDataDefinition (MyDefinitions.Two, "ELEVATOR TRIM POSITION", "Degrees", Datatype.Float32, 0f, Constants.Unused);
+			client.RegisterStructToDataDefinition (MyDefinitions.Two, typeof (Struct2));
 
 			client.RequestDataOnSimObject (MyRequests.Two, MyDefinitions.Two, Constants.ObjectIdUser, Period.Second, DataRequestFlag.Changed);
 
@@ -84,95 +86,93 @@ namespace HelloWorld
 			//	client.TransmitClientEvent (Constants.ObjectIdUser, MyEvents.ElevatorTrimSet, (uint)0, MyGroups.One, EventFlag.Default);
 			//}
 
-			var buff = new byte [1024];
-
 			while (running)
 			{
-				uint sizeRead;
-				var hr = client.GetNextDispatch (buff, out sizeRead);
-				if (hr >= 0)
-					OnReceiveFromServer (buff, sizeRead);
-				else
-					Thread.Sleep (10);
-			}
-		}
-
-		unsafe private void OnReceiveFromServer (byte [] buff, uint size)
-		{
-			fixed (byte* b = &buff [0])
-			{
-				var pData = (IntPtr)b;
-
-				var pRecv = Marshal.PtrToStructure<SIMCONNECT_RECV> (pData);
-				switch ((RecvId)pRecv.dwID)
+				try
 				{
-					case RecvId.Event:
-						{
-							// enter code to handle events received in a SIMCONNECT_RECV_EVENT structure.
-							var evt = Marshal.PtrToStructure<SIMCONNECT_RECV_EVENT> (pData);
-
-							switch ((MyEvents)evt.uEventID)
-							{
-								case MyEvents.Brakes:
-									Console.WriteLine ("MyEvents.Brakes {0}", evt.dwData);
-									break;
-
-								case MyEvents.ElevatorTrimSet:
-									Console.WriteLine ("MyEvents.ElevatorTrimSet {0}", (int)evt.dwData);
-									client.RequestDataOnSimObject (MyRequests.One, MyDefinitions.One, Constants.ObjectIdUser, Period.Once, DataRequestFlag.Default);
-									break;
-
-								case MyEvents.ElevTrimUp:
-									Console.WriteLine ("MyEvents.ElevTrimUp {0}", (int)evt.dwData);
-									client.RequestDataOnSimObject (MyRequests.One, MyDefinitions.One, Constants.ObjectIdUser, Period.Once, DataRequestFlag.Default);
-									break;
-
-								case MyEvents.ElevTrimDown:
-									Console.WriteLine ("MyEvents.ElevTrimDown {0}", (int)evt.dwData);
-									client.RequestDataOnSimObject (MyRequests.One, MyDefinitions.One, Constants.ObjectIdUser, Period.Once, DataRequestFlag.Default);
-									break;
-
-								default:
-									break;
-							}
-							break;
-						}
-
-					case RecvId.SimobjectData:
-						{
-							var data = Marshal.PtrToStructure<SIMCONNECT_RECV_SIMOBJECT_DATA> (pData);
-
-							switch ((MyRequests)data.dwRequestID)
-							{
-								case MyRequests.One:
-									var myStruct = Marshal.PtrToStructure<Struct1> (pData + (SIMCONNECT_RECV_SIMOBJECT_DATA_BYTYPE.dwDataStart));
-									Console.WriteLine ("TrimIndicator  = {0};		TrimPosition  = {1}", myStruct.TrimIndicator, myStruct.TrimPosition);
-									break;
-
-								case MyRequests.Two:
-									var myStruct2 = Marshal.PtrToStructure<Struct2> (pData + (SIMCONNECT_RECV_SIMOBJECT_DATA_BYTYPE.dwDataStart));
-									Console.WriteLine ($"Speed:{myStruct2.VerticalSpeed * 60}, Trim:{myStruct2.TrimPosition}");
-									break;
-
-								default:
-									break;
-
-							}
-
-							break;
-						}
-
-
-					case RecvId.Quit:
-						// enter code to handle exiting the application
-						running = false;
-						break;
-
-					default:
-						break;
+					// I really wish this call would return S_FALSE when no message exists
+					// instead it returns an error conditon that needs to be caught
+					var nextDispatch = client.GetNextDispatch ();
+					OnReceiveFromServer (nextDispatch);
+				}
+				catch (Exception)
+				{
+					Thread.Sleep (10);
 				}
 			}
 		}
+
+		private void OnReceiveFromServer (Recv nextDispatch)
+		{
+			switch (nextDispatch.Id)
+			{
+				case RecvId.Event:
+					{
+						// enter code to handle events received in a SIMCONNECT_RECV_EVENT structure.
+						var evt = nextDispatch as RecvEvent;
+
+						switch ((MyEvents)evt.EventId)
+						{
+							case MyEvents.Brakes:
+								Console.WriteLine ("MyEvents.Brakes {0}", evt.Data);
+								break;
+
+							case MyEvents.ElevatorTrimSet:
+								Console.WriteLine ("MyEvents.ElevatorTrimSet {0}", (int)evt.Data);
+								client.RequestDataOnSimObject (MyRequests.One, MyDefinitions.One, Constants.ObjectIdUser, Period.Once, DataRequestFlag.Default);
+								break;
+
+							case MyEvents.ElevTrimUp:
+								Console.WriteLine ("MyEvents.ElevTrimUp {0}", (int)evt.Data);
+								client.RequestDataOnSimObject (MyRequests.One, MyDefinitions.One, Constants.ObjectIdUser, Period.Once, DataRequestFlag.Default);
+								break;
+
+							case MyEvents.ElevTrimDown:
+								Console.WriteLine ("MyEvents.ElevTrimDown {0}", (int)evt.Data);
+								client.RequestDataOnSimObject (MyRequests.One, MyDefinitions.One, Constants.ObjectIdUser, Period.Once, DataRequestFlag.Default);
+								break;
+
+							default:
+								break;
+						}
+						break;
+					}
+
+				case RecvId.SimobjectData:
+					{
+						var data = nextDispatch as RecvSimObjectData;
+
+						switch ((MyRequests)data.RequestId)
+						{
+							case MyRequests.One:
+								var myStruct = (Struct1)data.Data;
+								Console.WriteLine ("TrimIndicator  = {0};		TrimPosition  = {1}", myStruct.TrimIndicator, myStruct.TrimPosition);
+								break;
+
+							case MyRequests.Two:
+								var myStruct2 = (Struct2)data.Data;
+								Console.WriteLine ($"Speed:{myStruct2.VerticalSpeed * 60}, Trim:{myStruct2.TrimPosition}");
+								break;
+
+							default:
+								break;
+
+						}
+
+						break;
+					}
+
+
+				case RecvId.Quit:
+					// enter code to handle exiting the application
+					running = false;
+					break;
+
+				default:
+					break;
+			}
+		}
+
 
 		public static void ClientMain (string [] args)
 		{
