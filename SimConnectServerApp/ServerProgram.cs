@@ -7,10 +7,10 @@ namespace HelloWorld
 	{
 		static void Main (string [] args)
 		{
-			var tList = new Task [2];
+			var tList = new Task [1];
 			tList [0] = Task.Run (() => ServerProgram.ServerMain (args));
 			Task.Delay (1000);
-			tList [1] = Task.Run (() => ClientProgram.ClientMain (args));
+			//tList [1] = Task.Run (() => ClientProgram.ClientMain (args));
 
 			Task.WaitAll (tList);
 		}

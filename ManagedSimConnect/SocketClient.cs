@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Runtime.CompilerServices;
@@ -128,7 +129,7 @@ namespace SimConnect
 		void ConnectToServer (string serverHostName, int port)
 		{
 			IPHostEntry ipHostInfo = Dns.GetHostEntry (serverHostName);
-			IPAddress ipAddress = ipHostInfo.AddressList [0];
+			IPAddress ipAddress = ipHostInfo.AddressList.Where (a => a.AddressFamily == AddressFamily.InterNetwork).FirstOrDefault ();
 			IPEndPoint remoteEP = new IPEndPoint (ipAddress, port);
 
 			socket = new Socket (ipAddress.AddressFamily,
