@@ -1,14 +1,11 @@
 ﻿using SimConnect;
 using System;
-using System.Collections.Concurrent;
-using System.ComponentModel;
 using System.Threading;
 using System.Threading.Tasks;
-using Xamarin.Forms;
 
 namespace ThrottleApp
 {
-	class ClientController
+	class ClientController : ClientControllerBase
 	{
 		SocketClient simConnect;
 		const float magicSimConnectNumber = 16383f;
@@ -83,33 +80,7 @@ namespace ThrottleApp
 			});
 		}
 
-		private TestModel viewModel;
-		public TestModel ViewModel
-		{
-			get => viewModel;
-
-			set
-			{
-				if (viewModel == value)
-					return;
-
-				if (viewModel != null)
-					viewModel.PropertyChanged -= ViewModel_PropertyChanged;
-
-				viewModel = value;
-				viewModel.PropertyChanged += ViewModel_PropertyChanged;
-			}
-		}
-
-		void ViewModel_PropertyChanged (object sender, PropertyChangedEventArgs e)
-		{
-			if (e.PropertyName == nameof (TestModel.TrimValueRequest))
-				SendTrimRequest (viewModel.TrimValueRequest);
-			else if (e.PropertyName == nameof (TestModel.ThrottleValueRequest))
-				SendThrottleRequest (viewModel.ThrottleValueRequest);
-		}
-
-		void SendTrimRequest (float trimValueRequest)
+		override protected void SendTrimRequest (float trimValueRequest)
 		{
 			Action nextCall = () =>
 			{
@@ -124,7 +95,7 @@ namespace ThrottleApp
 				nextTrimCall = nextCall;
 		}
 
-		void SendThrottleRequest (float throttleValueRequest)
+		override protected void SendThrottleRequest (float throttleValueRequest)
 		{
 			Action nextCall = () =>
 			{
@@ -137,20 +108,6 @@ namespace ThrottleApp
 
 			lock (trimLock)
 				nextTrimCall = nextCall;
-		}
-
-		void SetTrimValue (float newValue)
-		{
-			var cache = viewModel;
-			if (cache != null)
-				Device.InvokeOnMainThreadAsync (() => cache.TrimValue = newValue);
-		}
-
-		void SetThrottleValue (float newValue)
-		{
-			var cache = viewModel;
-			if (cache != null)
-				Device.InvokeOnMainThreadAsync (() => cache.ThrottleValue = newValue);
 		}
 	}
 }

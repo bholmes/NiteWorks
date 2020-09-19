@@ -4,7 +4,7 @@ namespace ThrottleApp
 {
 	public partial class MainPage : ContentPage
 	{
-		ClientController clientController;
+		ClientControllerBase clientController;
 
 		public MainPage ()
 		{
