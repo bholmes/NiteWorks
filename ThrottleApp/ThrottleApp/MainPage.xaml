@@ -8,34 +8,33 @@
         <throttleapp:TestModel/>
     </ContentPage.BindingContext>
 
-    <StackLayout Orientation="Vertical" HorizontalOptions="FillAndExpand">
-        <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+    <Grid ColumnSpacing="0" RowSpacing="0">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
 
-            <throttleapp:SliderView
-                HorizontalOptions="FillAndExpand"
-                BackgroundColor="#FFCD5C5C"
-                IndicatorValue="{Binding TrimValue}"
-                IndicatorValueRequest="{Binding TrimValueRequest}"
-                SensitivityFactor=".1"
-                MinValue="1"
-                MaxValue="-1"/>
-            <throttleapp:SliderView
-                HorizontalOptions="FillAndExpand"
-                BackgroundColor="#FF87CEFA"
-                IndicatorValue="{Binding ThrottleValue}"
-                IndicatorValueRequest="{Binding ThrottleValueRequest}"
-                MinValue="0"
-                MaxValue="1"/>
+        <throttleapp:SliderView Grid.Row="0" Grid.Column="0"
+            HorizontalOptions="FillAndExpand"
+            BackgroundColor="#FFCD5C5C"
+            ForegroundColor="White"
+            IndicatorValue="{Binding TrimValue}"
+            IndicatorValueRequest="{Binding TrimValueRequest}"
+            SensitivityFactor=".1"
+            MinValue="1"
+            MaxValue="-1"/>
+        <throttleapp:SliderView Grid.Row="0" Grid.Column="1"
+            HorizontalOptions="FillAndExpand"
+            BackgroundColor="#FF87CEFA"
+            ForegroundColor="White"
+            IndicatorValue="{Binding ThrottleValue}"
+            IndicatorValueRequest="{Binding ThrottleValueRequest}"
+            MinValue="0"
+            MaxValue="1"/>
 
-        </StackLayout>
-
-        <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand">
-
-            <Label  HorizontalOptions="FillAndExpand" Text="{Binding TrimValue}" />
-            <Label  HorizontalOptions="FillAndExpand" Text="{Binding ThrottleValue}" />
-        </StackLayout>
-
-    </StackLayout>
-
+    </Grid>
 
 </ContentPage>

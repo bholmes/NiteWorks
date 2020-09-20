@@ -17,13 +17,16 @@ namespace ThrottleApp
 
 		public static readonly BindableProperty SensitivityFactorProperty = BindableProperty.Create (nameof (SensitivityFactor), typeof (float), typeof (SliderView), default (float));
 		public float SensitivityFactor { get => (float)GetValue (SensitivityFactorProperty); set => SetValue (SensitivityFactorProperty, value); }
-		
-		
+
 		public static readonly BindableProperty MinValueProperty = BindableProperty.Create (nameof (MinValue), typeof (float), typeof (SliderView), default (float), defaultBindingMode: BindingMode.OneWay);
 		public float MinValue { get => (float)GetValue (MinValueProperty); set => SetValue (MinValueProperty, value); }
 
 		public static readonly BindableProperty MaxValueProperty = BindableProperty.Create (nameof (MaxValue), typeof (float), typeof (SliderView), default (float), defaultBindingMode: BindingMode.OneWay);
 		public float MaxValue { get => (float)GetValue (MaxValueProperty); set => SetValue (MaxValueProperty, value); }
+
+		public static readonly BindableProperty ForegroundColorProperty = BindableProperty.Create (nameof (ForegroundColor), typeof (Color), typeof (SliderView), Color.Gray, defaultBindingMode: BindingMode.OneWay);
+		public Color ForegroundColor { get => (Color)GetValue (ForegroundColorProperty); set => SetValue (ForegroundColorProperty, value); }
+
 
 		const float heightMargin = .1f;
 		const float widthMargin = .05f;
@@ -65,7 +68,7 @@ namespace ThrottleApp
 			var line1Paint = new SKPaint
 			{
 				Style = SKPaintStyle.Stroke,
-				Color = Color.Gray.ToSKColor (),
+				Color = ForegroundColor.ToSKColor (),
 				StrokeWidth = 5,
 			};
 
