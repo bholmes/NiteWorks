@@ -17,9 +17,13 @@ namespace ThrottleApp
 
 		public static readonly BindableProperty SensitivityFactorProperty = BindableProperty.Create (nameof (SensitivityFactor), typeof (float), typeof (SliderView), default (float));
 		public float SensitivityFactor { get => (float)GetValue (SensitivityFactorProperty); set => SetValue (SensitivityFactorProperty, value); }
+		
+		
+		public static readonly BindableProperty MinValueProperty = BindableProperty.Create (nameof (MinValue), typeof (float), typeof (SliderView), default (float), defaultBindingMode: BindingMode.OneWay);
+		public float MinValue { get => (float)GetValue (MinValueProperty); set => SetValue (MinValueProperty, value); }
 
-		public static readonly BindableProperty InvertProperty = BindableProperty.Create (nameof (Invert), typeof (bool), typeof (SliderView), default (bool), defaultBindingMode: BindingMode.OneWay);
-		public bool Invert { get => (bool)GetValue (InvertProperty); set => SetValue (InvertProperty, value); }
+		public static readonly BindableProperty MaxValueProperty = BindableProperty.Create (nameof (MaxValue), typeof (float), typeof (SliderView), default (float), defaultBindingMode: BindingMode.OneWay);
+		public float MaxValue { get => (float)GetValue (MaxValueProperty); set => SetValue (MaxValueProperty, value); }
 
 		const float heightMargin = .1f;
 		const float widthMargin = .05f;
@@ -30,6 +34,8 @@ namespace ThrottleApp
 		public SliderView ()
 		{
 			IndicatorValue = 0;
+			MinValue = 0;
+			MaxValue = 1f;
 			SensitivityFactor = 1f;
 			InitializeComponent ();
 		}
@@ -68,9 +74,8 @@ namespace ThrottleApp
 			var marginXValue = info.Width * widthMargin;
 			var marginYValue = info.Height * heightMargin;
 
-			var lineYPos = ((1f - 2 * heightMargin) * IndicatorValue + heightMargin) * info.Height;
-			if (!Invert)
-				lineYPos = info.Height - lineYPos;
+			var transIndicatorValue = (IndicatorValue - MinValue) / (MaxValue - MinValue);
+			var lineYPos = info.Height - (((1f - 2 * heightMargin) * transIndicatorValue + heightMargin) * info.Height);
 			canvas.DrawLine (marginXValue, lineYPos, info.Width - marginXValue, lineYPos, line1Paint);
 
 			var midX = info.Width / 2f;
@@ -87,10 +92,13 @@ namespace ThrottleApp
 				case GestureStatus.Running:
 					if (trackingPan)
 					{
-						var tVal = trackingStartPos + ((float)(SensitivityFactor * e.TotalY * (Invert ? 1f : -1f) / Height)) / (1 - 2f * heightMargin);
+						var tVal = trackingStartPos - ((float)((MaxValue - MinValue) *SensitivityFactor * e.TotalY / Height)) / (1 - 2f * heightMargin);
 
-						if (tVal > 1) tVal = 1f;
-						else if (tVal < 0) tVal = 0;
+						var maxVal = MaxValue > MinValue ? MaxValue : MinValue;
+						var minVal = MaxValue < MinValue ? MaxValue : MinValue;
+
+						if (tVal > maxVal) tVal = maxVal;
+						else if (tVal < minVal) tVal = minVal;
 						if (tVal != IndicatorValueRequest)
 						{
 							IndicatorValueRequest = tVal;

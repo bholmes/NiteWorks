@@ -59,7 +59,7 @@ namespace ThrottleApp
 								{
 									case MyRequests.TrimValueFetch:
 										var trimValue = (TrimValue)data.Data;
-										SetTrimValue ((trimValue.TrimPosition + 1f) / 2f);
+										SetTrimValue (trimValue.TrimPosition);
 										break;
 
 									case MyRequests.ThrottleValueFetch:
@@ -84,7 +84,7 @@ namespace ThrottleApp
 		{
 			Action nextCall = () =>
 			{
-				var convertedValue = (int)Math.Round ((2 * magicSimConnectNumber * trimValueRequest) - magicSimConnectNumber);
+				var convertedValue = (int)Math.Round (magicSimConnectNumber * trimValueRequest);
 				unchecked
 				{
 					simConnect.TransmitClientEvent (Constants.ObjectIdUser, MyEvents.ElevatorTrimSet, (uint)convertedValue, MyGroups.Default, EventFlag.Default);

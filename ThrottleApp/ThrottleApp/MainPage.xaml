@@ -11,10 +11,30 @@
     <StackLayout Orientation="Vertical" HorizontalOptions="FillAndExpand">
         <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
 
-            <throttleapp:SliderView HorizontalOptions="FillAndExpand" BackgroundColor="#FFCD5C5C" IndicatorValue="{Binding TrimValue}" IndicatorValueRequest="{Binding TrimValueRequest}" SensitivityFactor=".1" Invert="True"/>
-            <throttleapp:SliderView HorizontalOptions="FillAndExpand" BackgroundColor="#FF87CEFA" IndicatorValue="{Binding ThrottleValue, Mode=TwoWay}" IndicatorValueRequest="{Binding ThrottleValueRequest}"/>
+            <throttleapp:SliderView
+                HorizontalOptions="FillAndExpand"
+                BackgroundColor="#FFCD5C5C"
+                IndicatorValue="{Binding TrimValue}"
+                IndicatorValueRequest="{Binding TrimValueRequest}"
+                SensitivityFactor=".1"
+                MinValue="1"
+                MaxValue="-1"/>
+            <throttleapp:SliderView
+                HorizontalOptions="FillAndExpand"
+                BackgroundColor="#FF87CEFA"
+                IndicatorValue="{Binding ThrottleValue}"
+                IndicatorValueRequest="{Binding ThrottleValueRequest}"
+                MinValue="0"
+                MaxValue="1"/>
 
         </StackLayout>
+
+        <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand">
+
+            <Label  HorizontalOptions="FillAndExpand" Text="{Binding TrimValue}" />
+            <Label  HorizontalOptions="FillAndExpand" Text="{Binding ThrottleValue}" />
+        </StackLayout>
+
     </StackLayout>
 
 
