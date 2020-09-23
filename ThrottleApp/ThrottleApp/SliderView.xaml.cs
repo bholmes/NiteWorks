@@ -27,6 +27,9 @@ namespace ThrottleApp
 		public static readonly BindableProperty ForegroundColorProperty = BindableProperty.Create (nameof (ForegroundColor), typeof (Color), typeof (SliderView), Color.Gray, defaultBindingMode: BindingMode.OneWay);
 		public Color ForegroundColor { get => (Color)GetValue (ForegroundColorProperty); set => SetValue (ForegroundColorProperty, value); }
 
+		public static readonly BindableProperty ControlNameProperty = BindableProperty.Create (nameof (ControlName), typeof (string), typeof (SliderView), default (string), defaultBindingMode: BindingMode.OneWay);
+		public string ControlName { get => (string)GetValue (ControlNameProperty); set => SetValue (ControlNameProperty, value); }
+
 
 		const float heightMargin = .1f;
 		const float widthMargin = .05f;

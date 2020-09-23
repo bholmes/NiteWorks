@@ -6,6 +6,9 @@
              x:Name="self">
     <ContentView.Content>
         <StackLayout>
+            <Label
+                Text="{Binding Source={x:Reference self}, Path=ControlName}"
+                TextColor="{Binding Source={x:Reference self}, Path=ForegroundColor}"/>
             <skia:SKCanvasView x:Name="skView" PaintSurface="OnCanvasViewPaintSurface" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
                 <skia:SKCanvasView.GestureRecognizers>
                     <PanGestureRecognizer PanUpdated="PanUpdated"/>
