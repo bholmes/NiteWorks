@@ -10,7 +10,7 @@ namespace ThrottleApp
 		{
 			InitializeComponent ();
 
-			clientController = new ClientController { ViewModel = (TestModel)BindingContext };
+			clientController = new ClientController { ViewModel = (MainPageViewModel)BindingContext };
 		}
 	}
 }

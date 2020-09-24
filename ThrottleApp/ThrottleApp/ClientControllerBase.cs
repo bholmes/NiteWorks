@@ -5,8 +5,8 @@ namespace ThrottleApp
 {
 	abstract class ClientControllerBase
 	{
-		private TestModel viewModel;
-		public TestModel ViewModel
+		protected MainPageViewModel viewModel;
+		public MainPageViewModel ViewModel
 		{
 			get => viewModel;
 
@@ -25,27 +25,64 @@ namespace ThrottleApp
 
 		void ViewModel_PropertyChanged (object sender, PropertyChangedEventArgs e)
 		{
-			if (e.PropertyName == nameof (TestModel.TrimValueRequest))
+			if (e.PropertyName == nameof (MainPageViewModel.TrimValueRequest))
 				SendTrimRequest (viewModel.TrimValueRequest);
-			else if (e.PropertyName == nameof (TestModel.ThrottleValueRequest))
+			else if (e.PropertyName == nameof (MainPageViewModel.ThrottleValueRequest))
 				SendThrottleRequest (viewModel.ThrottleValueRequest);
+			else if (e.PropertyName == nameof (MainPageViewModel.LandingGearValueRequest))
+				SendLandingGearRequest (viewModel.LandingGearValueRequest);
+			else if (e.PropertyName == nameof (MainPageViewModel.FlapsHandleIndexRequest))
+				SetFlapsHandleIndexRequest (viewModel.FlapsHandleIndexRequest);
+			else if (e.PropertyName == nameof (MainPageViewModel.ParkingBrakeValueRequest))
+				SetParkingBrakeRequest (viewModel.ParkingBrakeValueRequest);
 		}
 
-		abstract protected void SendThrottleRequest (float throttleValueRequest);
-		abstract protected void SendTrimRequest (float trimValueRequest);
+		abstract protected void SendThrottleRequest (int throttleValueRequest);
+		abstract protected void SendTrimRequest (int trimValueRequest);
+		abstract protected void SendLandingGearRequest (int landingGearValueRequest);
+		abstract protected void SetFlapsHandleIndexRequest (int flapsHandleIndexRequest);
+		abstract protected void SetParkingBrakeRequest (int parkingBrakeValueRequest);
 
-		virtual protected void SetTrimValue (float newValue)
+		virtual protected void SetTrimValue (int newValue)
 		{
 			var cache = ViewModel;
 			if (cache != null)
 				Device.InvokeOnMainThreadAsync (() => cache.TrimValue = newValue);
 		}
 
-		virtual protected void SetThrottleValue (float newValue)
+		virtual protected void SetThrottleValue (int newValue)
 		{
 			var cache = ViewModel;
 			if (cache != null)
 				Device.InvokeOnMainThreadAsync (() => cache.ThrottleValue = newValue);
+		}
+
+		virtual protected void SetLandingGearValue (int newValue)
+		{
+			var cache = ViewModel;
+			if (cache != null)
+				Device.InvokeOnMainThreadAsync (() => cache.LandingGearValue = newValue);
+		}
+
+		virtual protected void SetFlapsNumHandlePositions (int newValue)
+		{
+			var cache = ViewModel;
+			if (cache != null)
+				Device.InvokeOnMainThreadAsync (() => cache.FlapsNumHandlePositions = newValue);
+		}
+
+		virtual protected void SetFlapsHandleIndex (int newValue)
+		{
+			var cache = ViewModel;
+			if (cache != null)
+				Device.InvokeOnMainThreadAsync (() => cache.FlapsHandleIndex = newValue);
+		}
+
+		virtual protected void SetParkingBrakeValue (int newValue)
+		{
+			var cache = ViewModel;
+			if (cache != null)
+				Device.InvokeOnMainThreadAsync (() => cache.ParkingBrakeValue = newValue);
 		}
 	}
 }

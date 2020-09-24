@@ -5,35 +5,67 @@
              x:Class="ThrottleApp.MainPage">
 
     <ContentPage.BindingContext>
-        <throttleapp:TestModel/>
+        <throttleapp:MainPageViewModel/>
     </ContentPage.BindingContext>
 
     <Grid ColumnSpacing="0" RowSpacing="0">
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
-        <throttleapp:SliderView Grid.Row="0" Grid.Column="0"
+        <throttleapp:SliderView Grid.Row="0" Grid.Column="0" Grid.RowSpan="3"
+            ControlName="Trim"
             HorizontalOptions="FillAndExpand"
             BackgroundColor="#FFCD5C5C"
             ForegroundColor="White"
             IndicatorValue="{Binding TrimValue}"
             IndicatorValueRequest="{Binding TrimValueRequest}"
             SensitivityFactor=".1"
-            MinValue="1"
-            MaxValue="-1"/>
-        <throttleapp:SliderView Grid.Row="0" Grid.Column="1"
+            MinValue="16383"
+            MaxValue="-16383"/>
+        <throttleapp:SliderView Grid.Row="0" Grid.Column="1" Grid.RowSpan="3"
+            ControlName="Throttle"
             HorizontalOptions="FillAndExpand"
             BackgroundColor="#FF87CEFA"
             ForegroundColor="White"
             IndicatorValue="{Binding ThrottleValue}"
             IndicatorValueRequest="{Binding ThrottleValueRequest}"
             MinValue="0"
-            MaxValue="1"/>
+            MaxValue="16383"/>
+        <throttleapp:SliderView Grid.Row="0" Grid.Column="2"
+            ControlName="Parking Brake"
+            HorizontalOptions="FillAndExpand"
+            BackgroundColor="Black"
+            ForegroundColor="White"
+            IndicatorValue="{Binding ParkingBrakeValue}"
+            IndicatorValueRequest="{Binding ParkingBrakeValueRequest}"
+            MinValue="1"
+            MaxValue="0"/>
+        <throttleapp:SliderView Grid.Row="1" Grid.Column="2"
+            ControlName="Landing Gear"
+            HorizontalOptions="FillAndExpand"
+            BackgroundColor="Green"
+            ForegroundColor="White"
+            IndicatorValue="{Binding LandingGearValue}"
+            IndicatorValueRequest="{Binding LandingGearValueRequest}"
+            MinValue="1"
+            MaxValue="0"/>
+        <throttleapp:SliderView Grid.Row="2" Grid.Column="2"
+            ControlName="Flaps"
+            HorizontalOptions="FillAndExpand"
+            BackgroundColor="LightSteelBlue"
+            ForegroundColor="White"
+            IndicatorValue="{Binding FlapsHandleIndex}"
+            IndicatorValueRequest="{Binding FlapsHandleIndexRequest}"
+            MinValue="{Binding FlapsNumHandlePositions}"
+            MaxValue="0"/>
 
     </Grid>
 
