@@ -129,7 +129,7 @@
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
   <ItemGroup>
     <ProjectReference Include="..\ThrottleApp\ThrottleApp.csproj">
-      <Project>{AD97D3DE-108D-4B68-8F14-B40242108D23}</Project>
+      <Project>{18889242-75CE-4814-9D84-4BB5A680FD46}</Project>
       <Name>ThrottleApp</Name>
     </ProjectReference>
   </ItemGroup>
