@@ -2,81 +2,34 @@
 {
 	class MainPageViewModel : BaseViewModel
 	{
-		private int trimValue = 20;
-		public int TrimValue
-		{
-			get { return this.trimValue; }
-			set { this.SetPropertyValue (ref this.trimValue, value); }
-		}
+		public ModelItem Trim { get; set; }
+		public ModelItem Throttle { get; set; }
+		public ModelItem LandingGear { get; set; }
+		public ModelItem FlapsNumHandlePositions { get; set; }
+		public ModelItem FlapsHandleIndex { get; set; }
+		public ModelItem ParkingBrake { get; set; }
 
-		private int trimValueRequest = 20;
-		public int TrimValueRequest
+		public class ModelItem : BaseViewModel
 		{
-			get { return this.trimValueRequest; }
-			set { this.SetPropertyValue (ref this.trimValueRequest, value); }
-		}
+			public ModelItem (int value)
+			{
+				this.value = value;
+				this.valueRequest = value;
+			}
 
-		private int throttleValue = 0;
-		public int ThrottleValue
-		{
-			get { return this.throttleValue; }
-			set { this.SetPropertyValue (ref this.throttleValue, value); }
-		}
+			private int value;
+			public int Value
+			{
+				get { return this.value; }
+				set { this.SetPropertyValue (ref this.value, value); }
+			}
 
-		private int throttleValueRequest = 0;
-		public int ThrottleValueRequest
-		{
-			get { return this.throttleValueRequest; }
-			set { this.SetPropertyValue (ref this.throttleValueRequest, value); }
-		}
-
-		private int landingGearValue = 0;
-		public int LandingGearValue
-		{
-			get { return this.landingGearValue; }
-			set { this.SetPropertyValue (ref this.landingGearValue, value); }
-		}
-
-		private int landingGearValueRequest = 0;
-		public int LandingGearValueRequest
-		{
-			get { return this.landingGearValueRequest; }
-			set { this.SetPropertyValue (ref this.landingGearValueRequest, value); }
-		}
-
-		private int flapsNumHandlePositions = 2;
-		public int FlapsNumHandlePositions
-		{
-			get { return this.flapsNumHandlePositions; }
-			set { this.SetPropertyValue (ref this.flapsNumHandlePositions, value); }
-		}
-
-		private int flapsHandleIndex = 20;
-		public int FlapsHandleIndex
-		{
-			get { return this.flapsHandleIndex; }
-			set { this.SetPropertyValue (ref this.flapsHandleIndex, value); }
-		}
-
-		private int flapsHandleIndexRequest = 20;
-		public int FlapsHandleIndexRequest
-		{
-			get { return this.flapsHandleIndexRequest; }
-			set { this.SetPropertyValue (ref this.flapsHandleIndexRequest, value); }
-		}
-
-		private int parkingBrakeValue = 0;
-		public int ParkingBrakeValue
-		{
-			get { return this.parkingBrakeValue; }
-			set { this.SetPropertyValue (ref this.parkingBrakeValue, value); }
-		}
-
-		private int parkingBrakeValueRequest = 0;
-		public int ParkingBrakeValueRequest
-		{
-			get { return this.parkingBrakeValueRequest; }
-			set { this.SetPropertyValue (ref this.parkingBrakeValueRequest, value); }
+			private int valueRequest;
+			public int ValueRequest
+			{
+				get { return this.valueRequest; }
+				set { this.SetPropertyValue (ref this.valueRequest, value); }
+			}
 		}
 	}
 }

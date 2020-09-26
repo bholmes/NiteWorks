@@ -1,88 +1,38 @@
 ﻿using System.ComponentModel;
 using Xamarin.Forms;
+using ThrottleApp.Controls;
 
 namespace ThrottleApp
 {
 	abstract class ClientControllerBase
 	{
-		protected MainPageViewModel viewModel;
-		public MainPageViewModel ViewModel
+		protected ControlBase [] controls = new ControlBase[] {
+			new TrimControl (), new ThrottleControl (), new LandingGearControl (),
+			new FlapsControl (), new ParkingBrakeControl () };
+
+		protected ClientControllerBase ()
 		{
-			get => viewModel;
+			viewModel = new MainPageViewModel ();
 
-			set
+			foreach (var ctrl in controls)
 			{
-				if (viewModel == value)
-					return;
-
-				if (viewModel != null)
-					viewModel.PropertyChanged -= ViewModel_PropertyChanged;
-
-				viewModel = value;
-				viewModel.PropertyChanged += ViewModel_PropertyChanged;
+				ctrl.AssignViewModelProperties (viewModel);
+				ctrl.RequestPropertyChanged += Control_RequestPropertyChanged;
 			}
 		}
 
-		void ViewModel_PropertyChanged (object sender, PropertyChangedEventArgs e)
+		private void Control_RequestPropertyChanged (object sender, System.EventArgs e)
 		{
-			if (e.PropertyName == nameof (MainPageViewModel.TrimValueRequest))
-				SendTrimRequest (viewModel.TrimValueRequest);
-			else if (e.PropertyName == nameof (MainPageViewModel.ThrottleValueRequest))
-				SendThrottleRequest (viewModel.ThrottleValueRequest);
-			else if (e.PropertyName == nameof (MainPageViewModel.LandingGearValueRequest))
-				SendLandingGearRequest (viewModel.LandingGearValueRequest);
-			else if (e.PropertyName == nameof (MainPageViewModel.FlapsHandleIndexRequest))
-				SetFlapsHandleIndexRequest (viewModel.FlapsHandleIndexRequest);
-			else if (e.PropertyName == nameof (MainPageViewModel.ParkingBrakeValueRequest))
-				SetParkingBrakeRequest (viewModel.ParkingBrakeValueRequest);
+			var ctrl = (ControlBase)sender;
+			SendValueRequest (ctrl);
 		}
 
-		abstract protected void SendThrottleRequest (int throttleValueRequest);
-		abstract protected void SendTrimRequest (int trimValueRequest);
-		abstract protected void SendLandingGearRequest (int landingGearValueRequest);
-		abstract protected void SetFlapsHandleIndexRequest (int flapsHandleIndexRequest);
-		abstract protected void SetParkingBrakeRequest (int parkingBrakeValueRequest);
-
-		virtual protected void SetTrimValue (int newValue)
+		private MainPageViewModel viewModel;
+		public MainPageViewModel ViewModel
 		{
-			var cache = ViewModel;
-			if (cache != null)
-				Device.InvokeOnMainThreadAsync (() => cache.TrimValue = newValue);
+			get => viewModel;
 		}
 
-		virtual protected void SetThrottleValue (int newValue)
-		{
-			var cache = ViewModel;
-			if (cache != null)
-				Device.InvokeOnMainThreadAsync (() => cache.ThrottleValue = newValue);
-		}
-
-		virtual protected void SetLandingGearValue (int newValue)
-		{
-			var cache = ViewModel;
-			if (cache != null)
-				Device.InvokeOnMainThreadAsync (() => cache.LandingGearValue = newValue);
-		}
-
-		virtual protected void SetFlapsNumHandlePositions (int newValue)
-		{
-			var cache = ViewModel;
-			if (cache != null)
-				Device.InvokeOnMainThreadAsync (() => cache.FlapsNumHandlePositions = newValue);
-		}
-
-		virtual protected void SetFlapsHandleIndex (int newValue)
-		{
-			var cache = ViewModel;
-			if (cache != null)
-				Device.InvokeOnMainThreadAsync (() => cache.FlapsHandleIndex = newValue);
-		}
-
-		virtual protected void SetParkingBrakeValue (int newValue)
-		{
-			var cache = ViewModel;
-			if (cache != null)
-				Device.InvokeOnMainThreadAsync (() => cache.ParkingBrakeValue = newValue);
-		}
+		protected abstract void SendValueRequest (ControlBase control);
 	}
 }

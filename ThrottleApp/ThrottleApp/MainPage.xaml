@@ -4,10 +4,6 @@
              xmlns:throttleapp="clr-namespace:ThrottleApp"
              x:Class="ThrottleApp.MainPage">
 
-    <ContentPage.BindingContext>
-        <throttleapp:MainPageViewModel/>
-    </ContentPage.BindingContext>
-
     <Grid ColumnSpacing="0" RowSpacing="0">
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
@@ -25,8 +21,8 @@
             HorizontalOptions="FillAndExpand"
             BackgroundColor="#FFCD5C5C"
             ForegroundColor="White"
-            IndicatorValue="{Binding TrimValue}"
-            IndicatorValueRequest="{Binding TrimValueRequest}"
+            IndicatorValue="{Binding Trim.Value}"
+            IndicatorValueRequest="{Binding Trim.ValueRequest}"
             SensitivityFactor=".1"
             MinValue="16383"
             MaxValue="-16383"/>
@@ -35,8 +31,8 @@
             HorizontalOptions="FillAndExpand"
             BackgroundColor="#FF87CEFA"
             ForegroundColor="White"
-            IndicatorValue="{Binding ThrottleValue}"
-            IndicatorValueRequest="{Binding ThrottleValueRequest}"
+            IndicatorValue="{Binding Throttle.Value}"
+            IndicatorValueRequest="{Binding Throttle.ValueRequest}"
             MinValue="0"
             MaxValue="16383"/>
         <throttleapp:SliderView Grid.Row="0" Grid.Column="2"
@@ -44,8 +40,8 @@
             HorizontalOptions="FillAndExpand"
             BackgroundColor="Black"
             ForegroundColor="White"
-            IndicatorValue="{Binding ParkingBrakeValue}"
-            IndicatorValueRequest="{Binding ParkingBrakeValueRequest}"
+            IndicatorValue="{Binding ParkingBrake.Value}"
+            IndicatorValueRequest="{Binding ParkingBrake.ValueRequest}"
             MinValue="1"
             MaxValue="0"/>
         <throttleapp:SliderView Grid.Row="1" Grid.Column="2"
@@ -53,8 +49,8 @@
             HorizontalOptions="FillAndExpand"
             BackgroundColor="Green"
             ForegroundColor="White"
-            IndicatorValue="{Binding LandingGearValue}"
-            IndicatorValueRequest="{Binding LandingGearValueRequest}"
+            IndicatorValue="{Binding LandingGear.Value}"
+            IndicatorValueRequest="{Binding LandingGear.ValueRequest}"
             MinValue="1"
             MaxValue="0"/>
         <throttleapp:SliderView Grid.Row="2" Grid.Column="2"
@@ -62,9 +58,9 @@
             HorizontalOptions="FillAndExpand"
             BackgroundColor="LightSteelBlue"
             ForegroundColor="White"
-            IndicatorValue="{Binding FlapsHandleIndex}"
-            IndicatorValueRequest="{Binding FlapsHandleIndexRequest}"
-            MinValue="{Binding FlapsNumHandlePositions}"
+            IndicatorValue="{Binding FlapsHandleIndex.Value}"
+            IndicatorValueRequest="{Binding FlapsHandleIndex.ValueRequest}"
+            MinValue="{Binding FlapsNumHandlePositions.Value}"
             MaxValue="0"/>
 
     </Grid>
