@@ -10,12 +10,12 @@ namespace SimConnect
 {
 	public class SocketServer
 	{
-		Socket socket;
-
 		public Task StartServer (int port)
 		{
 			return Task.Run (() =>
 			{
+				Socket socket;
+
 				// Data buffer for incoming data.  
 				byte [] bytes = new Byte [1024];
 
@@ -38,42 +38,48 @@ namespace SimConnect
 				listener.Bind (localEndPoint);
 				listener.Listen (10);
 
-				socket = listener.Accept ();
-
-				var buffSize = 1024;
-				var buff = new byte [buffSize];
-
-				var size = 0;
-
-				while (size == 0)
-				{
-					size = socket.Receive (buff);
-					Thread.Sleep (10);
-				}
-
-				// This should be a call to Open
-				var openRet = (MethodCall.ReturnValue.Open)MethodCall.FromByteArray (buff).Invoke ();
-				var hSimConnect = openRet.HSimConnect;
-				socket.Send (new MethodCall.ReturnValue (openRet).ToByteArray ());
-
-				if (hSimConnect == IntPtr.Zero)
-					return; // In the future we go back to listening
-
 				while (true)
 				{
-					size = socket.Receive (buff);
-					if (size > 0)
-						socket.Send (MethodCall.FromByteArray (buff).Invoke (hSimConnect).ToByteArray ());
-					else
-						Thread.Sleep (10);
+
+					socket = listener.Accept ();
+
+					Task.Run (() => GameLoop (socket));
 				}
-
-				//socket.Shutdown (SocketShutdown.Both);
-				//socket.Close ();
-
 			});
 		}
 
+		void GameLoop (Socket socket)
+		{
+			var buffSize = 1024;
+			var buff = new byte [buffSize];
 
+			var size = 0;
+
+			while (size == 0)
+			{
+				size = socket.Receive (buff);
+				Thread.Sleep (10);
+			}
+
+			// This should be a call to Open
+			var openRet = (MethodCall.ReturnValue.Open)MethodCall.FromByteArray (buff).Invoke ();
+			var hSimConnect = openRet.HSimConnect;
+			socket.Send (new MethodCall.ReturnValue (openRet).ToByteArray ());
+
+			if (hSimConnect == IntPtr.Zero)
+				return; // In the future we go back to listening
+
+			while (true)
+			{
+				size = socket.Receive (buff);
+				if (size > 0)
+					socket.Send (MethodCall.FromByteArray (buff).Invoke (hSimConnect).ToByteArray ());
+				else
+					Thread.Sleep (10);
+			}
+
+			//socket.Shutdown (SocketShutdown.Both);
+			//socket.Close ();
+		}
 	}
 }
