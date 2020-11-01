@@ -1,0 +1,24 @@
+name: Build MSFS2020Companion
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+    - 'FlightWork/MSFS2020Companion/**'
+  pull_request:
+    branches: [ main ]
+    paths:
+    - 'FlightWork/MSFS2020Companion/**'
+
+jobs:
+  Android:
+    runs-on: macos-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: Android
+      run: |
+        cd FlightWork
+        nuget restore
+        cd MSFS2020Companion/MSFS2020Companion.Android
+        msbuild MSFS2020Companion.Android.csproj /verbosity:normal /t:Rebuild /p:Configuration=Debug
+
