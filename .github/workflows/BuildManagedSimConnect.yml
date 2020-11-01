@@ -1,0 +1,34 @@
+name: Build ManagedSimConnect
+
+env:
+  # set this to the dot net version to use: 
+  DOTNET_VERSION: '3.1.x'           
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+    - 'FlightWork/ManagedSimConnect/**'
+  pull_request:
+    branches: [ main ]
+    paths:
+    - 'FlightWork/ManagedSimConnect/**'
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+      
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: ${{ env.DOTNET_VERSION }} 
+        
+    - name: Install dependencies
+      run: dotnet restore FlightWork/ManagedSimConnect/ManagedSimConnect.csproj
+
+    - name: Build
+      run: dotnet build FlightWork/ManagedSimConnect/ManagedSimConnect.csproj --configuration Release --no-restore
