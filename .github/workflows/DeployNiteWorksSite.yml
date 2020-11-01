@@ -1,0 +1,40 @@
+name: Deploy NiteWorksSite
+
+env:
+  # set this to the dot net version to use: 
+  DOTNET_VERSION: '3.1.x'
+
+  AZURE_WEBAPP_NAME: NiteWorks
+  AZURE_WEBAPP_PACKAGE_PATH: './NiteWorksSite/NiteWorks'
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+      
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: ${{ env.DOTNET_VERSION }} 
+        
+    - name: Install dependencies
+      run: dotnet restore NiteWorksSite/NiteWorks/NiteWorks.csproj
+
+    - name: Build
+      run: dotnet build NiteWorksSite/NiteWorks/NiteWorks.csproj --configuration Release --no-restore
+
+    - name: Publish
+      run: dotnet publish NiteWorksSite/NiteWorks/NiteWorks.csproj -c Release -o '${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/myapp' 
+
+    - name: 'Deploy'
+      uses: azure/webapps-deploy@v2
+      with: 
+        app-name: ${{ env.AZURE_WEBAPP_NAME }}
+        publish-profile: ${{ secrets.NITEWORK_WEBAPP_PUBLISH_PROFILE  }}
+        package: '${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/myapp'
