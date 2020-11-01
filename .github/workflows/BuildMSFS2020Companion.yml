@@ -21,4 +21,16 @@ jobs:
         nuget restore
         cd MSFS2020Companion/MSFS2020Companion.Android
         msbuild MSFS2020Companion.Android.csproj /verbosity:normal /t:Rebuild /p:Configuration=Debug
+        
+  iOS:
+    runs-on: macos-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: iOS
+      run: |
+        cd FlightWork
+        nuget restore
+        cd MSFS2020Companion/MSFS2020Companion.iOS
+        msbuild MSFS2020Companion.iOS.csproj /verbosity:normal /t:Rebuild /p:Platform=iPhoneSimulator /p:Configuration=Debug
+
 
