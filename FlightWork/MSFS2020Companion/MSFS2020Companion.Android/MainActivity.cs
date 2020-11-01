@@ -7,7 +7,7 @@ using Android.Views;
 using Android.Widget;
 using Android.OS;
 
-// Delete this
+// Delete this too
 
 namespace MSFS2020Companion.Droid
 {
