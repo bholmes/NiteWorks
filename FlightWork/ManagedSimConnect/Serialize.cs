@@ -6,6 +6,8 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Threading.Tasks;
 
+// Delete this 
+
 namespace SimConnect
 {
 	internal class Serialize
