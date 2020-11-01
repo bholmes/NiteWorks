@@ -1,0 +1,68 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:MSFS2020Companion="clr-namespace:MSFS2020Companion"
+             x:Class="MSFS2020Companion.MainPage">
+
+    <Grid ColumnSpacing="0" RowSpacing="0">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <MSFS2020Companion:SliderView Grid.Row="0" Grid.Column="0" Grid.RowSpan="3"
+            ControlName="Trim"
+            HorizontalOptions="FillAndExpand"
+            BackgroundColor="#FFCD5C5C"
+            ForegroundColor="White"
+            IndicatorValue="{Binding Trim.Value}"
+            IndicatorValueRequest="{Binding Trim.ValueRequest}"
+            SensitivityFactor=".1"
+            MinValue="16383"
+            MaxValue="-16383"/>
+        <MSFS2020Companion:SliderView Grid.Row="0" Grid.Column="1" Grid.RowSpan="3"
+            ControlName="Throttle"
+            HorizontalOptions="FillAndExpand"
+            BackgroundColor="#FF87CEFA"
+            ForegroundColor="White"
+            IndicatorValue="{Binding Throttle.Value}"
+            IndicatorValueRequest="{Binding Throttle.ValueRequest}"
+            MinValue="0"
+            MaxValue="16383"/>
+        <MSFS2020Companion:SliderView Grid.Row="0" Grid.Column="2"
+            ControlName="Parking Brake"
+            HorizontalOptions="FillAndExpand"
+            BackgroundColor="Black"
+            ForegroundColor="White"
+            IndicatorValue="{Binding ParkingBrake.Value}"
+            IndicatorValueRequest="{Binding ParkingBrake.ValueRequest}"
+            MinValue="1"
+            MaxValue="0"/>
+        <MSFS2020Companion:SliderView Grid.Row="1" Grid.Column="2"
+            ControlName="Landing Gear"
+            HorizontalOptions="FillAndExpand"
+            BackgroundColor="Green"
+            ForegroundColor="White"
+            IndicatorValue="{Binding LandingGear.Value}"
+            IndicatorValueRequest="{Binding LandingGear.ValueRequest}"
+            MinValue="1"
+            MaxValue="0"/>
+        <MSFS2020Companion:SliderView Grid.Row="2" Grid.Column="2"
+            ControlName="Flaps"
+            HorizontalOptions="FillAndExpand"
+            BackgroundColor="LightSteelBlue"
+            ForegroundColor="White"
+            IndicatorValue="{Binding FlapsHandleIndex.Value}"
+            IndicatorValueRequest="{Binding FlapsHandleIndex.ValueRequest}"
+            MinValue="{Binding FlapsNumHandlePositions.Value}"
+            MaxValue="0"/>
+
+    </Grid>
+
+</ContentPage>
