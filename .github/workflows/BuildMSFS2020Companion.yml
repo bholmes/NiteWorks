@@ -5,10 +5,12 @@ on:
     branches: [ main ]
     paths:
     - 'FlightWork/MSFS2020Companion/**'
+    - 'FlightWork/ManagedSimConnect/**'
   pull_request:
     branches: [ main ]
     paths:
     - 'FlightWork/MSFS2020Companion/**'
+    - 'FlightWork/ManagedSimConnect/**'
 
 jobs:
   Android:
