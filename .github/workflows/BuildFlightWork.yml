@@ -1,4 +1,4 @@
-name: Build ManagedSimConnect
+name: Build FlightWork
 
 env:
   # set this to the dot net version to use: 
@@ -9,10 +9,12 @@ on:
     branches: [ main ]
     paths:
     - 'FlightWork/ManagedSimConnect/**'
+    - 'FlightWork/FlightUtilities/**'
   pull_request:
     branches: [ main ]
     paths:
     - 'FlightWork/ManagedSimConnect/**'
+    - 'FlightWork/FlightUtilities/**'
 
 jobs:
   build:
@@ -28,7 +30,11 @@ jobs:
         dotnet-version: ${{ env.DOTNET_VERSION }} 
         
     - name: Install dependencies
-      run: dotnet restore FlightWork/ManagedSimConnect/ManagedSimConnect.csproj
+      run: dotnet restore FlightWork/FlightWork.sln
 
     - name: Build
       run: dotnet build FlightWork/ManagedSimConnect/ManagedSimConnect.csproj --configuration Release --no-restore
+      run: dotnet build FlightWork/FlightUtilities/FlightUtilities/FlightUtilities.csproj --configuration Release --no-restore
+
+    - name: Tests
+      run: dotnet test FlightWork/FlightUtilities/FlightUtilities.Tests/FlightUtilities.Tests.csproj --configuration Release --no-restore
