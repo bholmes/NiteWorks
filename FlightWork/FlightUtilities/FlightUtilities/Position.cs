@@ -1,5 +1,5 @@
 ﻿using System;
-//
+
 namespace FlightUtilities
 {
     public class Position
