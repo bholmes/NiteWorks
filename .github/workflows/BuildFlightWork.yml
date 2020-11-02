@@ -33,8 +33,9 @@ jobs:
       run: dotnet restore FlightWork/FlightWork.sln
 
     - name: Build
-      run: dotnet build FlightWork/ManagedSimConnect/ManagedSimConnect.csproj --configuration Release --no-restore
-      run: dotnet build FlightWork/FlightUtilities/FlightUtilities/FlightUtilities.csproj --configuration Release --no-restore
+      run: |
+        dotnet build FlightWork/ManagedSimConnect/ManagedSimConnect.csproj --configuration Release --no-restore
+        dotnet build FlightWork/FlightUtilities/FlightUtilities/FlightUtilities.csproj --configuration Release --no-restore
 
     - name: Tests
       run: dotnet test FlightWork/FlightUtilities/FlightUtilities.Tests/FlightUtilities.Tests.csproj --configuration Release --no-restore
